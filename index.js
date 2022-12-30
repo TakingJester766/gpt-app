@@ -41,4 +41,3 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-//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
