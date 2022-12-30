@@ -1,5 +1,5 @@
 // A express server, which will handle api requests come in and respond with a json object, it will use body parser as well as cors to handle the requests.
-//const config = require('./config.js');
+const config = require('./config.js');
 const OpenAI = require('openai');
 const { Configuration, OpenAIApi } = OpenAI;
 
@@ -12,7 +12,7 @@ const port = 3001;
 
 const configuration = new Configuration({
     organization: "org-Tp1wF8jaCJ2iV7r5alT4EQBX",
-    apiKey: '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',
+    apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 
@@ -23,8 +23,9 @@ app.post('/', async (req, res) => {
     const { message } = req.body;
     const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${message}`,
-        max_tokens: 100,
+        prompt:  
+        `${message}`,
+        max_tokens: 500,
         temperature: 0,
     });
     console.log(response.data);
@@ -39,4 +40,4 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-//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
+// 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
