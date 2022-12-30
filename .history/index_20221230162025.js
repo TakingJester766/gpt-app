@@ -1,7 +1,7 @@
 // A express server, which will handle api requests come in and respond with a json object, it will use body parser as well as cors to handle the requests.
 //const config = require('./config.js');
 
-//This is a test to see if the config file is working
+//This is a test
 const OpenAI = require('openai');
 const { Configuration, OpenAIApi } = OpenAI;
 
