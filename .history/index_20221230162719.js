@@ -1,7 +1,10 @@
 // A express server, which will handle api requests come in and respond with a json object, it will use body parser as well as cors to handle the requests.
-const config = require('./config.js');
+//const config = require('./config.js');
+
+//This is a test to see if the config file is working
 const OpenAI = require('openai');
 const { Configuration, OpenAIApi } = OpenAI;
+
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,7 +14,7 @@ const port = 3001;
 
 const configuration = new Configuration({
     organization: "org-Tp1wF8jaCJ2iV7r5alT4EQBX",
-    apiKey: config.apiKey
+    apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 

@@ -11,7 +11,7 @@ const port = 3001;
 
 const configuration = new Configuration({
     organization: "org-Tp1wF8jaCJ2iV7r5alT4EQBX",
-    apiKey: config.apiKey
+    apiKey: config.apiKey,
 });
 const openai = new OpenAIApi(configuration);
 
@@ -22,8 +22,9 @@ app.post('/', async (req, res) => {
     const { message } = req.body;
     const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${message}`,
-        max_tokens: 100,
+        prompt:  
+        `${message}`,
+        max_tokens: 500,
         temperature: 0,
     });
     console.log(response.data);
