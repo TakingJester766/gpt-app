@@ -29,15 +29,17 @@ app.post('/', async (req, res) => {
     try {
         const slices = await WebScrape.getSlices();
         try {
+            for (let i = 0; i < slices.length; i++) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             const { message } = req.body;
             const response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `You will be given a block of text. Following this block of text, the user will prompt you with a question. Answer it as best you can. 
                 
-                \n\n${slices[0]}\n\n
+                Text block: ${slices[i]}
             
-                user question: ${message}`,
-            max_tokens: 250,
+                User question: ${message}`,
+            max_tokens: 500,
             temperature: 0,
             });
             console.log(response.data);
@@ -45,6 +47,7 @@ app.post('/', async (req, res) => {
                 res.json({
                 message: response.data.choices[0].text
                 });
+            }
             }
         } catch(err) {
             console.log(err);
