@@ -26,38 +26,31 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/', async (req, res) => {
-    /*AsyncTest.testFxn().then((result) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-    });*/
-    // Wait for the slices array to be generated
-    console.log("Opening getSlices...");
-    WebScrape.getSlices().then((result) => {
-        console.log(result);
-    }).catch((error) => {
-        console.log(error);
-    });
-    console.log("Slices array generated...");
-
-    // Get the value of the first slice in the array
-    //const slice = slices[0];
-
-    // Use the slice value in your code
-    //console.log(slice);
-
-    const { message } = req.body;
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: `${message}`,
-        max_tokens: 250,
-        temperature: 0,
-    });
-    console.log(response.data);
-    if (response.data.choices[0].text) {
-        res.json({
-            message: response.data.choices[0].text
-        });
+    try {
+        const slices = await WebScrape.getSlices();
+        try {
+            const { message } = req.body;
+            const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `You will be given a block of text. Following this block of text, the user will prompt you with a question. Answer it as best you can. 
+                
+                \n\n${slices[0]}\n\n
+            
+                user question: ${message}`,
+            max_tokens: 250,
+            temperature: 0,
+            });
+            console.log(response.data);
+            if (response.data.choices[0].text) {
+                res.json({
+                message: response.data.choices[0].text
+                });
+            }
+        } catch(err) {
+            console.log(err);
+        }
+    } catch(err) {
+        console.log(err);
     }
     //console.log(slices[0]);
 });
