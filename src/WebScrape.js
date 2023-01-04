@@ -25,32 +25,35 @@ module.exports = {
   });
 
   // Print the text of each <p> tag
-  const maxCharacters = 4900;
+  let textArr = [];
 
-  const allText = p_tags.join(" "); // join all the p_tags elements into a single string
-  let currentIndex = 0;
 
-  while (currentIndex < allText.length) {
-    let slice = allText.slice(currentIndex, currentIndex + maxCharacters);
 
-    // If the slice ends in the middle of a word, move the end index back to the beginning of the word
-    if (/\S/.test(allText.charAt(currentIndex + maxCharacters))) {
-      let endIndex = slice.lastIndexOf(" ");
-      if (endIndex === -1) {
-        endIndex = slice.length;
-      }
-      slice = slice.slice(0, endIndex);
+    for (let i = 0; i < p_tags.length; i++) {
+        let j = 0;
+
+        while (p_tags[i].length > 0) {
+            if (textArr[j] == null) {
+                textArr[j] = "";
+            }
+        
+            if (textArr[j].length + p_tags[i].length >= 4800) {
+                let remainingLength = 4800 - textArr[j].length;
+                textArr[j] += p_tags[i].substring(0, remainingLength);
+                p_tags[i] = p_tags[i].substring(remainingLength);
+                j++;
+            } else {
+                textArr[j] += p_tags[i];
+                p_tags[i] = "";
+            }
+        }
     }
-
-    slices.push(slice);
-    currentIndex += slice.length;
-  }
 
   //console.log(slices[0]);
   
   // Close the browser
   await browser.close();
   
-  return slices;
+  return textArr;
   }
 } 

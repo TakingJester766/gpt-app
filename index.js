@@ -2,7 +2,6 @@
 
 
 // You can now call the getSlices function in other files like this:
-const { testFxn } = require('./src/AsyncTest.js');
 const { getSlices } = require('./src/WebScrape.js');
 const config = require('./config.js');
 const OpenAI = require('openai');
@@ -27,19 +26,22 @@ app.use(cors());
 
 app.post('/', async (req, res) => {
     try {
-        const slices = await WebScrape.getSlices();
+        const textArr = await WebScrape.getSlices();
         try {
-            for (let i = 0; i < slices.length; i++) {
+            for (let i = 0; i < textArr.length; i++) {
             await new Promise(resolve => setTimeout(resolve, 1000));
+            console.log(textArr[i]);
             const { message } = req.body;
             const response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `You will be given a block of text. Following this block of text, the user will prompt you with a question. Answer it as best you can. 
                 
-                Text block: ${slices[i]}
+                Text block: ${textArr[i]}
+
+                If you are unable to answer the question or are unsure, please respond with "I don't know".
             
                 User question: ${message}`,
-            max_tokens: 500,
+            max_tokens: 200,
             temperature: 0,
             });
             console.log(response.data);
@@ -55,6 +57,7 @@ app.post('/', async (req, res) => {
     } catch(err) {
         console.log(err);
     }
+    
     //console.log(slices[0]);
 });
 
