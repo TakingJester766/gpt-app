@@ -5,7 +5,6 @@ import './App.css';
 
 function App() {
   const [message, setMessage] = useState('');
-  const [initialResponse, setInitialResponse] = useState('');
   const [response, setResponse] = useState('');
 
   const handleSubmit = (e) => {
