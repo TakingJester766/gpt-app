@@ -37,8 +37,8 @@ module.exports = {
                 textArr[j] = "";
             }
         
-            if (textArr[j].length + p_tags[i].length >= 4800) {
-                let remainingLength = 4800 - textArr[j].length;
+            if (textArr[j].length + p_tags[i].length >= 18000) {
+                let remainingLength = 10000 - textArr[j].length;
                 textArr[j] += p_tags[i].substring(0, remainingLength);
                 p_tags[i] = p_tags[i].substring(remainingLength);
                 j++;
