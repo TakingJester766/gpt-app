@@ -2,7 +2,6 @@
 
 
 // You can now call the getSlices function in other files like this:
-const { getSlices } = require('./src/WebScrape.js');
 const config = require('./config.js');
 const OpenAI = require('openai');
 const { Configuration, OpenAIApi } = OpenAI;
@@ -24,9 +23,9 @@ const openai = new OpenAIApi(configuration);
 app.use(bodyParser.json());
 app.use(cors());
 
-let isSummary = true;
+let isSummary = false;
 
-isSummary ? app.post('/', async (req, res) => {
+isSummary === true ? app.post('/', async (req, res) => {
 
     let responseSummary = "";
 
@@ -37,7 +36,7 @@ isSummary ? app.post('/', async (req, res) => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             console.log(textArr[i]);
             const { message } = req.body;
-            const response = await openai.createCompletion({
+            let response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `You will be given a block of text. Following this block of text, the user will prompt you with a question. Answer it as best you can. 
                 
@@ -64,10 +63,9 @@ isSummary ? app.post('/', async (req, res) => {
     }
 
     try {
-        const textArr = await WebScrape.getSlices();
-        try {
+        
             await new Promise(resolve => setTimeout(resolve, 1000));
-            const response = await openai.createCompletion({
+            let response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `You will be given a block of text. Following this block of text summarize the text. 
                 
@@ -84,9 +82,7 @@ isSummary ? app.post('/', async (req, res) => {
                 });
             }
             
-        } catch(err) {
-            console.log(err);
-        }
+        
     } catch(err) {
         console.log(err);
     }
@@ -103,7 +99,7 @@ isSummary ? app.post('/', async (req, res) => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             console.log(textArr[i]);
             const { message } = req.body;
-            const response = await openai.createCompletion({
+            let response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `You will be given a block of text. Following this block of text, the user will prompt you with a question. Answer it as best you can. 
                 
@@ -112,7 +108,7 @@ isSummary ? app.post('/', async (req, res) => {
                 If you are unable to answer the question or are unsure, please respond with "I don't know".
             
                 User question: ${message}`,
-            max_tokens: 200,
+            max_tokens: 250,
             temperature: 0,
             });
             console.log(response.data);
@@ -125,6 +121,25 @@ isSummary ? app.post('/', async (req, res) => {
         } catch(err) {
             console.log(err);
         }
+        console.log("RESPONSE SUMMARY: " + responseSummary);
+    } catch(err) {
+        console.log(err);
+    }
+    try {
+        let response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Rephrase to sound more cohesive:
+                
+                Text block: ${responseSummary}`,
+            max_tokens: 500,
+            temperature: 0,
+            });
+            if (response.data.choices[0].text) {
+                res.json({
+                message: response.data.choices[0].text
+                });
+            }
+
     } catch(err) {
         console.log(err);
     }
